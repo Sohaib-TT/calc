@@ -1,0 +1,217 @@
+import { Button, VerticalBox, GridBox } from "std-widgets.slint";
+
+component CalcButton inherits Rectangle {
+    in property <image> icon;
+    in property <string> value;
+    in property <brush> bg-color: #1E2026;
+    callback clicked();
+
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+    min-width: 30px;
+    min-height: 30px;
+    max-height: 55px;
+
+    background: touch-area.pressed ? #10B981 : root.bg-color;
+    border-radius: 8px;
+
+    Image {
+        source: root.icon;
+        width: root.width;
+        height: root.height;
+        image-fit: contain;
+    }
+
+    touch-area := TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
+}
+
+component SciButton inherits Rectangle {
+    in property <image> icon;
+    in property <string> value;
+    in property <brush> bg-color: #1E2026;
+    callback clicked();
+
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+    min-width: 27px;
+    min-height: 20px;
+    max-height: 25px;
+
+    background: touch-area.pressed ? #10B981 : root.bg-color;
+    border-radius: 18px;
+
+    Image {
+        source: root.icon;
+        width: root.width;
+        height: root.height;
+        image-fit: contain;
+    }
+
+    touch-area := TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
+}
+
+export component AppWindow inherits Window {
+    in-out property<int> counter: 42;
+
+    preferred-height: 500px;
+    preferred-width: 300px;
+    min-height: 500px;
+    min-width: 300px;
+    background: #0a0a0a;
+
+    callback button-pressed(string);
+
+    VerticalLayout {
+        GridLayout {
+            Rectangle {
+                min-height: 100px;
+                background: #121316;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+            }
+            vertical-stretch: 1;
+        }
+        GridLayout {
+            padding-top: 7px;
+            padding-right: 6px;
+            padding-left: 6px;
+            spacing: 3px;
+            Row {
+                SciButton {
+                    icon: @image-url("icons/e.png");
+                    bg-color: #434b5e;}
+                SciButton {
+                    icon: @image-url("icons/pwr.png");
+                    bg-color: #434b5e;}
+                SciButton {
+                    icon: @image-url("icons/(.png");
+                    bg-color: #434b5e;}
+                SciButton {
+                    icon: @image-url("icons/).png");
+                    bg-color: #434b5e;}
+                SciButton {
+                    icon: @image-url("icons/square root.png");
+                    bg-color: #434b5e;}
+            }
+            Row {
+                SciButton {
+                    icon: @image-url("icons/ln.png");
+                    bg-color: #434b5e;}
+                SciButton {
+                    icon: @image-url("icons/log.png");
+                    bg-color: #434b5e;}
+                SciButton {
+                    icon: @image-url("icons/cos.png");
+                    bg-color: #434b5e;}
+                SciButton {
+                    icon: @image-url("icons/sin.png");
+                    bg-color: #434b5e;}
+                SciButton {
+                    icon: @image-url("icons/tan.png");
+                    bg-color: #434b5e;}
+            }
+        }
+        GridLayout {
+            vertical-stretch: 3;
+            height: 325px;
+
+            spacing: 7px;
+            padding: 10px;
+            cross-axis-self-alignment: center;
+            Row {
+                CalcButton {
+                    icon: @image-url("icons/ans.png");
+                    bg-color: #F43F5E;
+                }
+                CalcButton {
+                    icon: @image-url("icons/ac.png");
+                    bg-color: #F43F5E;
+                }
+                CalcButton {
+                    icon: @image-url("icons/mod.png");
+                    bg-color: #2D323F;
+                }
+                CalcButton {
+                    icon: @image-url("icons/div.png");
+                    bg-color: #2D323F;
+                }   
+            }
+
+            Row {
+                CalcButton {
+                    icon: @image-url("icons/7.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/8.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/9.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/mult.png");
+                    bg-color: #2D323F;
+                }
+            }
+            Row {
+                CalcButton {
+                    icon: @image-url("icons/4.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/5.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/6.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/-.png");
+                    bg-color: #2D323F;
+                }
+            }
+            Row {
+                CalcButton {
+                    icon: @image-url("icons/1.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/2.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/3.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/+.png");
+                    bg-color: #2D323F;
+                }
+            }
+            Row {
+                CalcButton {
+                    icon: @image-url("icons/dot.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/0.png");
+                }
+                CalcButton {
+                    icon: @image-url("icons/del.png");
+                    bg-color: #2D323F;
+                }
+                CalcButton {
+                    icon: @image-url("icons/=.png");
+                    value: "=";
+                    bg-color: #2D323F;
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
+                }
+            }
+
+
+        }
+    }
+}
