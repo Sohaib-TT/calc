@@ -60,10 +60,10 @@ component SciButton inherits Rectangle {
 
 export component AppWindow inherits Window {
 
-    preferred-height: 500px;
-    preferred-width: 300px;
-    min-height: 500px;
-    min-width: 300px;
+    preferred-height: 485px;
+    preferred-width: 250px;
+    min-height: 485px;
+    min-width: 250px;
     background: #0a0a0a;
 
     callback button-pressed(string);
@@ -141,18 +141,34 @@ export component AppWindow inherits Window {
                 CalcButton {
                     icon: @image-url("icons/div.png");
                     bg-color: #2D323F;
+                    value: "div";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
             }
 
             Row {
                 CalcButton {
                     icon: @image-url("icons/7.png");
+                    value: "7";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/8.png");
+                    value: "8";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/9.png");
+                    value: "9";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/mult.png");
@@ -162,12 +178,24 @@ export component AppWindow inherits Window {
             Row {
                 CalcButton {
                     icon: @image-url("icons/4.png");
+                    value: "4";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/5.png");
+                    value: "5";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/6.png");
+                    value: "6";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/-.png");
@@ -177,12 +205,24 @@ export component AppWindow inherits Window {
             Row {
                 CalcButton {
                     icon: @image-url("icons/1.png");
+                    value: "1";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/2.png");
+                    value: "2";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/3.png");
+                    value: "3";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/+.png");
@@ -192,13 +232,25 @@ export component AppWindow inherits Window {
             Row {
                 CalcButton {
                     icon: @image-url("icons/dot.png");
+                    value: "dot";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/0.png");
+                    value: "0";
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/del.png");
+                    value: "del";
                     bg-color: #2D323F;
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/=.png");
