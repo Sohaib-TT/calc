@@ -8,14 +8,9 @@ component CalcButton inherits Rectangle {
 
     horizontal-stretch: 1;
     vertical-stretch: 1;
-<<<<<<< HEAD
     min-width: 30px;
     min-height: 30px;
     max-height: 55px;
-=======
-    min-width: 50px;
-    min-height: 50px;
->>>>>>> dc4982f3f53a012732688197326e2c94d677a3fe
 
     background: touch-area.pressed ? #10B981 : root.bg-color;
     border-radius: 8px;
@@ -33,7 +28,6 @@ component CalcButton inherits Rectangle {
         }
     }
 }
-<<<<<<< HEAD
 
 component SciButton inherits Rectangle {
     in property <image> icon;
@@ -65,17 +59,9 @@ component SciButton inherits Rectangle {
 }
 
 export component AppWindow inherits Window {
-    in-out property<int> counter: 42;
 
     preferred-height: 500px;
     preferred-width: 300px;
-=======
-export component AppWindow inherits Window {
-    in-out property<int> counter: 42;
-
-    preferred-height: 700px;
-    preferred-width: 420px;
->>>>>>> dc4982f3f53a012732688197326e2c94d677a3fe
     min-height: 500px;
     min-width: 300px;
     background: #0a0a0a;
@@ -85,11 +71,7 @@ export component AppWindow inherits Window {
     VerticalLayout {
         GridLayout {
             Rectangle {
-<<<<<<< HEAD
                 min-height: 100px;
-=======
-                min-height: 150px;
->>>>>>> dc4982f3f53a012732688197326e2c94d677a3fe
                 background: #121316;
                 border-bottom-left-radius: 20px;
                 border-bottom-right-radius: 20px;
@@ -97,7 +79,6 @@ export component AppWindow inherits Window {
             vertical-stretch: 1;
         }
         GridLayout {
-<<<<<<< HEAD
             padding-top: 7px;
             padding-right: 6px;
             padding-left: 6px;
@@ -141,26 +122,16 @@ export component AppWindow inherits Window {
             vertical-stretch: 3;
             height: 325px;
 
-=======
-            vertical-stretch: 3;
-            min-height: 350px;
-            max-height: 600px;
-            max-width:1280px;
->>>>>>> dc4982f3f53a012732688197326e2c94d677a3fe
             spacing: 7px;
             padding: 10px;
             cross-axis-self-alignment: center;
             Row {
                 CalcButton {
-<<<<<<< HEAD
-                    icon: @image-url("icons/ans.png");
-=======
-                    icon: @image-url("icons/expand.png");
->>>>>>> dc4982f3f53a012732688197326e2c94d677a3fe
+                    icon: @image-url("icons/ac.png");
                     bg-color: #F43F5E;
                 }
                 CalcButton {
-                    icon: @image-url("icons/ac.png");
+                    icon: @image-url("icons/ans.png");
                     bg-color: #F43F5E;
                 }
                 CalcButton {
@@ -170,7 +141,7 @@ export component AppWindow inherits Window {
                 CalcButton {
                     icon: @image-url("icons/div.png");
                     bg-color: #2D323F;
-                }   
+                }
             }
 
             Row {
