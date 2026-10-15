@@ -130,7 +130,7 @@ Node* addNum(char value){
 void addOp(Node** head,char op,Node* node = NULL){
     switch (op)
     {
-    case '+': case '-': case 'x': case '%': case '!':
+    case '+': case '-': case 'x': case '%': case '!':case '(':case ')':case '.':
         {Node* opnode = (Node *)malloc(sizeof(Node));
         opnode->cvalue[0] = 'n';
         opnode->cvalue[1] = 'n';
@@ -253,11 +253,171 @@ void addOp(Node** head,char op,Node* node = NULL){
         opnode2->pdetails = NULL;
         opnode1->pdetails = opnode2;}
         break;
+    
+    case 'c'://cos
+        {
+        Node* opnode1 = (Node *)malloc(sizeof(Node));
+        opnode1->type = 1;
+        opnode1->cvalue[0] = 'c';
+        opnode1->cvalue[1] = 'o';
+        opnode1->cvalue[2] = '|';
+        opnode1->p = NULL;
+        opnode1->n = NULL;
+        addnode(head,opnode1,node);
 
+        Node* opnode2 = (Node *)malloc(sizeof(Node));
+        opnode2->type = 1;
+        opnode2->cvalue[0] = '|';
+        opnode2->cvalue[1] = 'c';
+        opnode2->cvalue[2] = 'o';
+        opnode2->p = NULL;
+        opnode2->n = NULL;
+        addnode(head,opnode2,node);
+        
+        opnode1->details = NULL;
+        opnode2->details = opnode1;
+        opnode2->pdetails = NULL;
+        opnode1->pdetails = opnode2;
+        }
+        break;
+    
+    case 's'://sin
+        {
+        Node* opnode1 = (Node *)malloc(sizeof(Node));
+        opnode1->type = 1;
+        opnode1->cvalue[0] = 's';
+        opnode1->cvalue[1] = 'i';
+        opnode1->cvalue[2] = '|';
+        opnode1->p = NULL;
+        opnode1->n = NULL;
+        addnode(head,opnode1,node);
+
+        Node* opnode2 = (Node *)malloc(sizeof(Node));
+        opnode2->type = 1;
+        opnode2->cvalue[0] = '|';
+        opnode2->cvalue[1] = 's';
+        opnode2->cvalue[2] = 'i';
+        opnode2->p = NULL;
+        opnode2->n = NULL;
+        addnode(head,opnode2,node);
+        
+        opnode1->details = NULL;
+        opnode2->details = opnode1;
+        opnode2->pdetails = NULL;
+        opnode1->pdetails = opnode2;
+        }
+        break;
+    
+    case 't': //tan
+        {
+        Node* opnode1 = (Node *)malloc(sizeof(Node));
+        opnode1->type = 1;
+        opnode1->cvalue[0] = 't';
+        opnode1->cvalue[1] = 'a';
+        opnode1->cvalue[2] = '|';
+        opnode1->p = NULL;
+        opnode1->n = NULL;
+        addnode(head,opnode1,node);
+
+        Node* opnode2 = (Node *)malloc(sizeof(Node));
+        opnode2->type = 1;
+        opnode2->cvalue[0] = '|';
+        opnode2->cvalue[1] = 't';
+        opnode2->cvalue[2] = 'a';
+        opnode2->p = NULL;
+        opnode2->n = NULL;
+        addnode(head,opnode2,node);
+        
+        opnode1->details = NULL;
+        opnode2->details = opnode1;
+        opnode2->pdetails = NULL;
+        opnode1->pdetails = opnode2;
+        }
+        break;
+    
+    case '^':
+    {
+        Node* opnode1 = (Node *)malloc(sizeof(Node));
+        opnode1->type = 1;
+        opnode1->cvalue[0] = 'p';
+        opnode1->cvalue[1] = 'w';
+        opnode1->cvalue[2] = '|';
+        opnode1->p = NULL;
+        opnode1->n = NULL;
+        opnode1->details = NULL;
+        addnode(head,opnode1,node);
+        Node* opnode2 = (Node *)malloc(sizeof(Node));
+        opnode2->type = 1;
+        opnode2->cvalue[0] = 'p';
+        opnode2->cvalue[1] = 'w';
+        opnode2->cvalue[2] = 'r';
+        opnode2->p = NULL;
+        opnode2->n = NULL;
+        opnode2->details = opnode1;
+        opnode1->pdetails = opnode2;
+        addnode(head,opnode2,node);       
+        Node* opnode3 = (Node *)malloc(sizeof(Node));
+        opnode3->type = 1;
+        opnode3->cvalue[0] = '|';
+        opnode3->cvalue[1] = 'p';
+        opnode3->cvalue[2] = 'w';
+        opnode3->p = NULL;
+        opnode3->n = NULL;
+        opnode3->details = opnode2;
+        opnode3->pdetails = NULL;
+        opnode2->pdetails = opnode3;
+        addnode(head,opnode3,node);
+        }       
+        break;
+    case 'r':
+    {
+        Node* opnode1 = (Node *)malloc(sizeof(Node));
+        opnode1->type = 1;
+        opnode1->cvalue[0] = 'r';
+        opnode1->cvalue[1] = 't';
+        opnode1->cvalue[2] = '|';
+        opnode1->p = NULL;
+        opnode1->n = NULL;
+        opnode1->details = NULL;
+        addnode(head,opnode1,node);
+        Node* opnode2 = (Node *)malloc(sizeof(Node));
+        opnode2->type = 1;
+        opnode2->cvalue[0] = 'r';
+        opnode2->cvalue[1] = '|';
+        opnode2->cvalue[2] = 'n';
+        opnode2->p = NULL;
+        opnode2->n = NULL;
+        opnode2->details = opnode1;
+        opnode1->pdetails = opnode2;
+        addnode(head,opnode2,node);       
+        Node* opnode3 = (Node *)malloc(sizeof(Node));
+        opnode3->type = 1;
+        opnode3->cvalue[0] = '|';
+        opnode3->cvalue[1] = 'r';
+        opnode3->cvalue[2] = 't';
+        opnode3->p = NULL;
+        opnode3->n = NULL;
+        opnode3->details = opnode2;
+        opnode3->pdetails = NULL;
+        opnode2->pdetails = opnode3;
+        addnode(head,opnode3,node);
+        }       
+        break;
     default:{
         break;
     }
     }
+}
+int ac(Node** head){
+    if(*head == NULL){return 0;}
+    Node* current = *head;
+    while (current != NULL) {
+        Node* nextNode = current->n;
+        free(current);
+        current = nextNode; 
+    }
+    *head = NULL;
+    return 1;
 }
 
 
@@ -271,6 +431,7 @@ int main(int argc, char **argv)
 
     
     Node* eqHead = NULL;
+    
 
 
     addnode(&eqHead,addNum('9'));
@@ -300,9 +461,21 @@ int main(int argc, char **argv)
         else if(value == "dot"){addOp(&eqHead,'.');}
         else if(value == "del"){delnode(eqHead,&eqHead);}
         else if(value == "div"){addOp(&eqHead,'/');}
-        else if(value == "="){}
-        else if(value == "="){}
-        else if(value == "="){}
+        else if(value == "+"){addOp(&eqHead,'+');}
+        else if(value == "-"){addOp(&eqHead,'-');}
+        else if(value == "x"){addOp(&eqHead,'x');}
+        else if(value == "%"){addOp(&eqHead,'%');}
+        else if(value == "ac"){ac(&eqHead);}
+        else if(value == "ln"){addOp(&eqHead,'1');}
+        else if(value == "log"){addOp(&eqHead,'2');}
+        else if(value == "cos"){addOp(&eqHead,'c');}
+        else if(value == "sin"){addOp(&eqHead,'s');}
+        else if(value == "tan"){addOp(&eqHead,'t');}
+        else if(value == "e"){addOp(&eqHead,'e');}
+        else if(value == "^"){addOp(&eqHead,'^');}
+        else if(value == "("){addOp(&eqHead,'(');}
+        else if(value == ")"){addOp(&eqHead,')');}
+        else if(value == "root"){addOp(&eqHead,'r');}
         display(eqHead); 
     });
 

@@ -9,6 +9,6 @@
 #include <vector>
 
 
-DisplayNode displayBuilder(Node node ; Node end = NULL){
-    return NULL;
-}  
+int displayBuilder(Node* node , Node* end = NULL){
+    return 0;
+} 
