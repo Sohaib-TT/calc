@@ -92,6 +92,8 @@ export component AppWindow inherits Window {
         KeyBinding {keys: @keys(Return);activated => {root.button-pressed("=");}}
         KeyBinding {keys: @keys(Backspace);activated => {root.button-pressed("del");}}
         KeyBinding {keys: @keys(Shift + Backspace);activated => {root.button-pressed("ac");}}
+        KeyBinding {keys: @keys(RightArrow);activated => {root.button-pressed(">");}}
+        KeyBinding {keys: @keys(LeftArrow);activated => {root.button-pressed("<");}}
     }
     VerticalLayout {
         GridLayout {

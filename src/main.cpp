@@ -7,10 +7,13 @@
 
 
 
-int delnode(Node* node,Node** head){
+int delnode(Node** cursor,Node** head){
+    Node* node = *cursor;
+    if (*head == NULL){return 0;}
     if(node==NULL){
-        return 0;
-    }
+        node = *head;
+        while(node->n != NULL){node = node->n;}
+    }else if(node->p != NULL){node = node->p;}
     if(node->type == 0){
         if(node->p != NULL && node->n != NULL){
             node->n->p = node->p;
@@ -19,6 +22,7 @@ int delnode(Node* node,Node** head){
         }else if(node->p == NULL && node->n != NULL){
             node = node->n;
             *head = node;
+            *cursor = node;
             free(node->p);
             node->p = NULL;
         }else if(node->p != NULL && node->n == NULL){
@@ -27,13 +31,18 @@ int delnode(Node* node,Node** head){
             node->n = NULL;
         }else{
             *head = NULL;
+            *cursor = NULL;
             free(node);
             return 1;
         }
     }else if(node->type == 1){
+        if(*cursor != NULL && (*cursor)->p != NULL){
+            *cursor = (*cursor)->p;
+        }else if(*cursor != NULL && (*cursor)->n != NULL){
+            *cursor = (*cursor)->n;
+        }
         while(node->details != NULL) node = node->details;
         while(node->pdetails != NULL) {
-            Node* pdetails = node->pdetails;
             if(node->p != NULL && node->n != NULL){
                 node->n->p = node->p;
                 node->p->n = node->n;
@@ -49,10 +58,11 @@ int delnode(Node* node,Node** head){
                 node->n = NULL;
             }else{
                 *head = NULL;
+                *cursor = NULL;
                 free(node);
                 return 1;
             }
-            node = pdetails;
+            node = node->pdetails;
             if(node == NULL){return 1;}
         }
         if(node->p != NULL && node->n != NULL){
@@ -71,24 +81,32 @@ int delnode(Node* node,Node** head){
             node->n = NULL;
         }else{
             *head = NULL;
+            *cursor = NULL;
             free(node);
             return 1;
         }
+        
     }
     return 0;
 }
+
 int addnode(Node** head,Node* newnode,Node* node = NULL){
     if (head == NULL || newnode == NULL) return -1;
 
     if (*head == NULL) {
         *head = newnode;
         newnode->n = NULL;
+        newnode->p = NULL;
         return 0;
     }
 
     if (node != NULL) {
-        newnode->n = node->n;
-        node->n = newnode;
+        if(node->p != NULL){node->p->n = newnode;}
+        else{*head = newnode;}
+        newnode->p = node->p;
+        newnode->n = node;
+        node->p = newnode;
+        if(*head == node){*head = newnode;}
         return 0;
     }
 
@@ -98,15 +116,17 @@ int addnode(Node** head,Node* newnode,Node* node = NULL){
     }
     temp->n = newnode;
     newnode->n = NULL;
+    newnode->p = temp;
 
     return 0;
 }
-int display(Node* head){
+int display(Node* head,Node* cursor){
     if (head == NULL){
         return 0;
     }
     Node* node = head;
     while (node != NULL){
+        if(node == cursor){printf("I");}
         if(node->type == 0){
             printf("%c",node->cvalue[0]);
         }else{
@@ -114,6 +134,7 @@ int display(Node* head){
         }    
         node = node->n;
     }
+    if(cursor == NULL){printf("I");}
     printf("\n");
     return 0;
 }
@@ -127,7 +148,9 @@ Node* addNum(char value){
     return node;
 }
 
-void addOp(Node** head,char op,Node* node = NULL){
+void addOp(Node** head,char op,Node** cursor = NULL){
+    Node * node = NULL;
+    if(cursor != NULL){node = *cursor;}
     switch (op)
     {
     case '+': case '-': case 'x': case '%': case '!':case '(':case ')':case '.':
@@ -408,7 +431,8 @@ void addOp(Node** head,char op,Node* node = NULL){
     }
     }
 }
-int ac(Node** head){
+
+int ac(Node** head,Node** cursor){
     if(*head == NULL){return 0;}
     Node* current = *head;
     while (current != NULL) {
@@ -417,9 +441,36 @@ int ac(Node** head){
         current = nextNode; 
     }
     *head = NULL;
+    *cursor = NULL;
     return 1;
 }
 
+int cursorMov(Node** cursor,Node** head,char diraction){
+    if (*head == NULL){ return 0;}
+    
+    Node* node = *cursor;
+    switch (diraction)
+    {
+    case '<':
+        if(*cursor == NULL){
+            node = *head;
+            while (node->n != NULL){*cursor = node->n;node = *cursor;} 
+            return 0; 
+        }
+        if(node->p != NULL){
+            *cursor = node->p;
+        }
+        break;
+    case '>':
+        if(*cursor == NULL){return 0;}
+        *cursor = node->n;
+        break;
+    
+    default:
+        break;
+    }
+    return 0;
+}
 
 #ifdef __ANDROID__
 extern "C" void slint_main()
@@ -431,6 +482,7 @@ int main(int argc, char **argv)
 
     
     Node* eqHead = NULL;
+    Node* cursor = NULL;
     
 
 
@@ -442,41 +494,43 @@ int main(int argc, char **argv)
     addnode(&eqHead,addNum('4'));
     addOp(&eqHead,'e');
     addOp(&eqHead,'/');
-    display(eqHead);
+    display(eqHead,cursor);
 
     std::string equation = "987+/3>2";
 
     ui->on_button_pressed([&](slint::SharedString val) {
         std::string value = std::string(val);
-        if (value == "0") {addnode(&eqHead,addNum('0'));}
-        else if(value == "1"){addnode(&eqHead,addNum('1'));}
-        else if(value == "2"){addnode(&eqHead,addNum('2'));}
-        else if(value == "3"){addnode(&eqHead,addNum('3'));}
-        else if(value == "4"){addnode(&eqHead,addNum('4'));}
-        else if(value == "5"){addnode(&eqHead,addNum('5'));}
-        else if(value == "6"){addnode(&eqHead,addNum('6'));}
-        else if(value == "7"){addnode(&eqHead,addNum('7'));}
-        else if(value == "8"){addnode(&eqHead,addNum('8'));}
-        else if(value == "9"){addnode(&eqHead,addNum('9'));}
-        else if(value == "dot"){addOp(&eqHead,'.');}
-        else if(value == "del"){delnode(eqHead,&eqHead);}
-        else if(value == "div"){addOp(&eqHead,'/');}
-        else if(value == "+"){addOp(&eqHead,'+');}
-        else if(value == "-"){addOp(&eqHead,'-');}
-        else if(value == "x"){addOp(&eqHead,'x');}
-        else if(value == "%"){addOp(&eqHead,'%');}
-        else if(value == "ac"){ac(&eqHead);}
-        else if(value == "ln"){addOp(&eqHead,'1');}
-        else if(value == "log"){addOp(&eqHead,'2');}
-        else if(value == "cos"){addOp(&eqHead,'c');}
-        else if(value == "sin"){addOp(&eqHead,'s');}
-        else if(value == "tan"){addOp(&eqHead,'t');}
-        else if(value == "e"){addOp(&eqHead,'e');}
-        else if(value == "^"){addOp(&eqHead,'^');}
-        else if(value == "("){addOp(&eqHead,'(');}
-        else if(value == ")"){addOp(&eqHead,')');}
-        else if(value == "root"){addOp(&eqHead,'r');}
-        display(eqHead); 
+        if (value == "0") {addnode(&eqHead,addNum('0'),cursor);}
+        else if(value == "1"){addnode(&eqHead,addNum('1'),cursor);}
+        else if(value == "2"){addnode(&eqHead,addNum('2'),cursor);}
+        else if(value == "3"){addnode(&eqHead,addNum('3'),cursor);}
+        else if(value == "4"){addnode(&eqHead,addNum('4'),cursor);}
+        else if(value == "5"){addnode(&eqHead,addNum('5'),cursor);}
+        else if(value == "6"){addnode(&eqHead,addNum('6'),cursor);}
+        else if(value == "7"){addnode(&eqHead,addNum('7'),cursor);}
+        else if(value == "8"){addnode(&eqHead,addNum('8'),cursor);}
+        else if(value == "9"){addnode(&eqHead,addNum('9'),cursor);}
+        else if(value == "dot"){addOp(&eqHead,'.',&cursor);}
+        else if(value == "del"){delnode(&cursor,&eqHead);}
+        else if(value == "div"){addOp(&eqHead,'/',&cursor);}
+        else if(value == "+"){addOp(&eqHead,'+',&cursor);}
+        else if(value == "-"){addOp(&eqHead,'-',&cursor);}
+        else if(value == "x"){addOp(&eqHead,'x',&cursor);}
+        else if(value == "%"){addOp(&eqHead,'%',&cursor);}
+        else if(value == "ac"){ac(&eqHead,&cursor);}
+        else if(value == "ln"){addOp(&eqHead,'1',&cursor);}
+        else if(value == "log"){addOp(&eqHead,'2',&cursor);}
+        else if(value == "cos"){addOp(&eqHead,'c',&cursor);}
+        else if(value == "sin"){addOp(&eqHead,'s',&cursor);}
+        else if(value == "tan"){addOp(&eqHead,'t',&cursor);}
+        else if(value == "e"){addOp(&eqHead,'e',&cursor);}
+        else if(value == "^"){addOp(&eqHead,'^',&cursor);}
+        else if(value == "("){addOp(&eqHead,'(',&cursor);}
+        else if(value == ")"){addOp(&eqHead,')',&cursor);}
+        else if(value == "root"){addOp(&eqHead,'r',&cursor);}
+        else if(value == "<"){cursorMov(&cursor,&eqHead,'<');}
+        else if(value == ">"){cursorMov(&cursor,&eqHead,'>');}
+        display(eqHead,cursor); 
     });
 
     ui->run();
