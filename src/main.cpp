@@ -4,8 +4,28 @@
 #include <stdlib.h>
 #include <string>
 #include "nodes.hpp"
+#include <vector>
 
 
+
+int displaySlint (const std::shared_ptr<slint::VectorModel<slint::SharedString>>& display, Node* head){
+    slint::SharedString text = "";
+    display->clear();
+    Node* node = head;
+    while(node != NULL){
+        switch (node->cvalue[0])
+        {
+        case '0':case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':
+            text = std::string(1, node->cvalue[0]);
+            break;
+        default:
+            break;
+        }
+        display->push_back(text);
+        node = node->n;
+    }
+    return 0;
+}
 
 int delnode(Node** cursor,Node** head){
     Node* node = *cursor;
@@ -477,8 +497,12 @@ extern "C" void slint_main()
 #else
 int main(int argc, char **argv)
 #endif
-{
+{   
     auto ui = AppWindow::create();
+
+    std::vector<slint::SharedString> display = {""};
+    auto model = std::make_shared<slint::VectorModel<slint::SharedString>>();
+    ui->set_display_list(model);
 
     
     Node* eqHead = NULL;
@@ -494,7 +518,8 @@ int main(int argc, char **argv)
     addnode(&eqHead,addNum('4'));
     addOp(&eqHead,'e');
     addOp(&eqHead,'/');
-    display(eqHead,cursor);
+    displaySlint(model, eqHead);
+ 
 
     std::string equation = "987+/3>2";
 
@@ -530,7 +555,7 @@ int main(int argc, char **argv)
         else if(value == "root"){addOp(&eqHead,'r',&cursor);}
         else if(value == "<"){cursorMov(&cursor,&eqHead,'<');}
         else if(value == ">"){cursorMov(&cursor,&eqHead,'>');}
-        display(eqHead,cursor); 
+        displaySlint(model, eqHead);
     });
 
     ui->run();

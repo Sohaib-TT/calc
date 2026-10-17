@@ -1,4 +1,4 @@
-import { Button, VerticalBox, GridBox } from "std-widgets.slint";
+import { Button, VerticalBox, GridBox, ScrollView } from "std-widgets.slint";
 
 component CalcButton inherits Rectangle {
     in property <image> icon;
@@ -60,6 +60,9 @@ component SciButton inherits Rectangle {
 
 export component AppWindow inherits Window {
 
+    in property <[string]> display-list;
+    
+
     preferred-height: 485px;
     preferred-width: 250px;
     min-height: 485px;
@@ -102,6 +105,27 @@ export component AppWindow inherits Window {
                 background: #121316;
                 border-bottom-left-radius: 20px;
                 border-bottom-right-radius: 20px;
+                ScrollView {
+                vertical-scrollbar-policy: always-off; 
+                horizontal-scrollbar-policy: as-needed;
+                HorizontalLayout {
+                    padding-top: 20px;
+                    for text-value in display-list : Rectangle {
+                    max-width: 10px;
+                    max-height: 10px;
+                    
+
+                    Text {
+                        text: text-value;
+                        color: white;
+                        font-size: 22px;
+                        font-weight: 600;
+                        vertical-alignment: center;
+                        horizontal-alignment: center;
+                    }
+                    }
+                }
+                }
             }
             vertical-stretch: 1;
         }
