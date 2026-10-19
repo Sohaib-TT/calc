@@ -1,4 +1,4 @@
-import { Button, VerticalBox, GridBox, ScrollView } from "std-widgets.slint";
+import { Button, VerticalBox, GridBox, ScrollView, TextEdit } from "std-widgets.slint";
 
 component CalcButton inherits Rectangle {
     in property <image> icon;
@@ -38,6 +38,7 @@ component SciButton inherits Rectangle {
     horizontal-stretch: 1;
     vertical-stretch: 1;
     min-width: 27px;
+    max-width: 100px;
     min-height: 20px;
     max-height: 25px;
 
@@ -61,11 +62,30 @@ component SciButton inherits Rectangle {
 export component AppWindow inherits Window {
 
     in property <[string]> display-list;
-    
+    in property <int> cursor-index;
 
-    preferred-height: 485px;
-    preferred-width: 250px;
-    min-height: 485px;
+    callback open-docs();
+    callback open-info();
+    MenuBar {
+        
+        
+        Menu {
+            title: @tr("About");
+            MenuItem {
+                title: @tr("documntation");
+                activated => {root.open-docs();}
+            }
+            MenuSeparator {}
+            MenuItem {
+                title: @tr("info");
+                activated => {root.open-info();}
+            }
+        }
+    }
+    
+    preferred-height: 520px;
+    preferred-width: 350px;
+    min-height: 520px;
     min-width: 250px;
     background: #0a0a0a;
 
@@ -110,20 +130,40 @@ export component AppWindow inherits Window {
                 horizontal-scrollbar-policy: as-needed;
                 HorizontalLayout {
                     padding-top: 20px;
-                    for text-value in display-list : Rectangle {
-                    max-width: 10px;
-                    max-height: 10px;
+                    padding-left:5px;
+                    property <length> xpos:0;
+                    for text-value[index] in display-list : HorizontalLayout {
                     
-
-                    Text {
+                    property <bool> cursor: index > 0 && display-list[index - 1] == "I";
+                    if text-value  != "I" :txt :=Rectangle {
+                        max-width: 25px;
+                        preferred-width: 15px;
+                        height: 25px;
+                        HorizontalLayout{
+                        Rectangle{
+                            width: 2px;
+                            height: 22px;
+                            background: cursor ? #fefefe : #121316;
+                            
+                        }
+                        Text {
                         text: text-value;
                         color: white;
                         font-size: 22px;
                         font-weight: 600;
                         vertical-alignment: center;
                         horizontal-alignment: center;
+                        }
+                        }
                     }
                     }
+                    if display-list.length -1 == cursor-index : Rectangle{
+                            width: 2px;
+                            height: 22px;
+                            background:#fefefe;
+                            
+                    }
+
                 }
                 }
             }
@@ -134,6 +174,7 @@ export component AppWindow inherits Window {
             padding-right: 6px;
             padding-left: 6px;
             spacing: 3px;
+            cross-axis-self-alignment: center;
             Row {
                 SciButton {
                     icon: @image-url("icons/e.png");

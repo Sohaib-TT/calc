@@ -8,23 +8,56 @@
 
 
 
-int displaySlint (const std::shared_ptr<slint::VectorModel<slint::SharedString>>& display, Node* head){
+int displaySlint (const std::shared_ptr<slint::VectorModel<slint::SharedString>>& display, Node* head,Node* cursor=NULL){
     slint::SharedString text = "";
+    int i = 0, cursor_index = 0;
     display->clear();
     Node* node = head;
     while(node != NULL){
         switch (node->cvalue[0])
         {
         case '0':case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':
+        case '+': case '-': case '%': case '!':case '(':case ')':case '.':case '^': case 'e':
             text = std::string(1, node->cvalue[0]);
+            break;
+    
+        case 'x':
+            text ="*";
+            break;
+        case '/':
+            if (node->cvalue[1] == '|'){text ="(";}
+            else{text =")/(";}
+            break;
+        case 'l':
+            if (node->cvalue[1] == '|'){text ="ln(";}
+            else{text ="log(";}
+            break;
+        case 'c':
+            text ="cos(";
+            break;
+        case 's':
+            text ="sin(";
+            break;
+        case 't':
+            text ="tan(";
+            break;
+        case 'r':
+            text ="√(";
+            break;
+        case '|':
+            text =")";
             break;
         default:
             break;
         }
+        if (node == cursor){display->push_back("I"); cursor_index =i;}else{i++;}
+        
         display->push_back(text);
+        
         node = node->n;
     }
-    return 0;
+    if (cursor == NULL){display->push_back("I");cursor_index =i;}
+    return cursor_index;
 }
 
 int delnode(Node** cursor,Node** head){
@@ -63,6 +96,7 @@ int delnode(Node** cursor,Node** head){
         }
         while(node->details != NULL) node = node->details;
         while(node->pdetails != NULL) {
+            Node* pdetails = node->pdetails;
             if(node->p != NULL && node->n != NULL){
                 node->n->p = node->p;
                 node->p->n = node->n;
@@ -82,7 +116,7 @@ int delnode(Node** cursor,Node** head){
                 free(node);
                 return 1;
             }
-            node = node->pdetails;
+            node = pdetails;
             if(node == NULL){return 1;}
         }
         if(node->p != NULL && node->n != NULL){
@@ -140,7 +174,8 @@ int addnode(Node** head,Node* newnode,Node* node = NULL){
 
     return 0;
 }
-int display(Node* head,Node* cursor){
+
+int cmdDisplay(Node* head, Node* cursor) {
     if (head == NULL){
         return 0;
     }
@@ -173,7 +208,7 @@ void addOp(Node** head,char op,Node** cursor = NULL){
     if(cursor != NULL){node = *cursor;}
     switch (op)
     {
-    case '+': case '-': case 'x': case '%': case '!':case '(':case ')':case '.':
+    case '+': case '-': case 'x': case '%': case '!':case '(':case ')':case '.':case '^':case 'e':
         {Node* opnode = (Node *)malloc(sizeof(Node));
         opnode->cvalue[0] = 'n';
         opnode->cvalue[1] = 'n';
@@ -190,8 +225,8 @@ void addOp(Node** head,char op,Node** cursor = NULL){
     {
         Node* opnode1 = (Node *)malloc(sizeof(Node));
         opnode1->type = 1;
-        opnode1->cvalue[0] = '|';
-        opnode1->cvalue[1] = '/';
+        opnode1->cvalue[0] = '/';
+        opnode1->cvalue[1] = '|';
         opnode1->cvalue[2] = 'n';
         opnode1->p = NULL;
         opnode1->n = NULL;
@@ -209,8 +244,8 @@ void addOp(Node** head,char op,Node** cursor = NULL){
         addnode(head,opnode2,node);       
         Node* opnode3 = (Node *)malloc(sizeof(Node));
         opnode3->type = 1;
-        opnode3->cvalue[0] = '/';
-        opnode3->cvalue[1] = '|';
+        opnode3->cvalue[0] = '|';
+        opnode3->cvalue[1] = '/';
         opnode3->cvalue[2] = 'n';
         opnode3->p = NULL;
         opnode3->n = NULL;
@@ -272,30 +307,7 @@ void addOp(Node** head,char op,Node** cursor = NULL){
         opnode1->pdetails = opnode2;}
         break;
     
-    case 'e':
-        {
-        Node* opnode1 = (Node *)malloc(sizeof(Node));
-        opnode1->type = 1;
-        opnode1->cvalue[0] = 'e';
-        opnode1->cvalue[1] = '|';
-        opnode1->cvalue[2] = 'n';
-        opnode1->p = NULL;
-        opnode1->n = NULL;
-        addnode(head,opnode1,node);
-        Node* opnode2 = (Node *)malloc(sizeof(Node));
-        opnode2->type = 1;
-        opnode2->cvalue[0] = '|';
-        opnode2->cvalue[1] = 'e';
-        opnode2->cvalue[2] = 'n';
-        opnode2->p = NULL;
-        opnode2->n = NULL;
-        addnode(head,opnode2,node);
-
-        opnode1->details = NULL;
-        opnode2->details = opnode1;
-        opnode2->pdetails = NULL;
-        opnode1->pdetails = opnode2;}
-        break;
+    
     
     case 'c'://cos
         {
@@ -378,40 +390,7 @@ void addOp(Node** head,char op,Node** cursor = NULL){
         }
         break;
     
-    case '^':
-    {
-        Node* opnode1 = (Node *)malloc(sizeof(Node));
-        opnode1->type = 1;
-        opnode1->cvalue[0] = 'p';
-        opnode1->cvalue[1] = 'w';
-        opnode1->cvalue[2] = '|';
-        opnode1->p = NULL;
-        opnode1->n = NULL;
-        opnode1->details = NULL;
-        addnode(head,opnode1,node);
-        Node* opnode2 = (Node *)malloc(sizeof(Node));
-        opnode2->type = 1;
-        opnode2->cvalue[0] = 'p';
-        opnode2->cvalue[1] = 'w';
-        opnode2->cvalue[2] = 'r';
-        opnode2->p = NULL;
-        opnode2->n = NULL;
-        opnode2->details = opnode1;
-        opnode1->pdetails = opnode2;
-        addnode(head,opnode2,node);       
-        Node* opnode3 = (Node *)malloc(sizeof(Node));
-        opnode3->type = 1;
-        opnode3->cvalue[0] = '|';
-        opnode3->cvalue[1] = 'p';
-        opnode3->cvalue[2] = 'w';
-        opnode3->p = NULL;
-        opnode3->n = NULL;
-        opnode3->details = opnode2;
-        opnode3->pdetails = NULL;
-        opnode2->pdetails = opnode3;
-        addnode(head,opnode3,node);
-        }       
-        break;
+    
     case 'r':
     {
         Node* opnode1 = (Node *)malloc(sizeof(Node));
@@ -425,25 +404,14 @@ void addOp(Node** head,char op,Node** cursor = NULL){
         addnode(head,opnode1,node);
         Node* opnode2 = (Node *)malloc(sizeof(Node));
         opnode2->type = 1;
-        opnode2->cvalue[0] = 'r';
-        opnode2->cvalue[1] = '|';
-        opnode2->cvalue[2] = 'n';
+        opnode2->cvalue[0] = '|';
+        opnode2->cvalue[1] = 'r';
+        opnode2->cvalue[2] = 't';
         opnode2->p = NULL;
         opnode2->n = NULL;
         opnode2->details = opnode1;
         opnode1->pdetails = opnode2;
-        addnode(head,opnode2,node);       
-        Node* opnode3 = (Node *)malloc(sizeof(Node));
-        opnode3->type = 1;
-        opnode3->cvalue[0] = '|';
-        opnode3->cvalue[1] = 'r';
-        opnode3->cvalue[2] = 't';
-        opnode3->p = NULL;
-        opnode3->n = NULL;
-        opnode3->details = opnode2;
-        opnode3->pdetails = NULL;
-        opnode2->pdetails = opnode3;
-        addnode(head,opnode3,node);
+        addnode(head,opnode2,node);
         }       
         break;
     default:{
@@ -504,20 +472,11 @@ int main(int argc, char **argv)
     auto model = std::make_shared<slint::VectorModel<slint::SharedString>>();
     ui->set_display_list(model);
 
-    
+
     Node* eqHead = NULL;
     Node* cursor = NULL;
-    
+    int cursor_index;
 
-
-    addnode(&eqHead,addNum('9'));
-    addnode(&eqHead,addNum('8'));
-    addnode(&eqHead,addNum('7'));
-    addnode(&eqHead,addNum('6'));
-    addnode(&eqHead,addNum('5'));
-    addnode(&eqHead,addNum('4'));
-    addOp(&eqHead,'e');
-    addOp(&eqHead,'/');
     displaySlint(model, eqHead);
  
 
@@ -555,8 +514,28 @@ int main(int argc, char **argv)
         else if(value == "root"){addOp(&eqHead,'r',&cursor);}
         else if(value == "<"){cursorMov(&cursor,&eqHead,'<');}
         else if(value == ">"){cursorMov(&cursor,&eqHead,'>');}
-        displaySlint(model, eqHead);
+        cursor_index = displaySlint(model, eqHead, cursor);
+        ui->set_cursor_index(cursor_index);
+        cmdDisplay(eqHead,cursor);
     });
-
+    ui->on_open_docs([]() {
+        #if defined(_WIN32)
+            system("start readme.html");
+        #elif defined(__APPLE__)
+            system("open readme.html");
+        #else
+            system("xdg-open readme.html");
+        #endif
+    });
+    ui->on_open_info([]() {
+        #if defined(_WIN32)
+            system("start https://github.com/Sohaib-TT/calc");
+        #elif defined(__APPLE__)
+            system("open https://github.com/Sohaib-TT/calc");
+        #else
+            system("xdg-open https://github.com/Sohaib-TT/calc");
+        #endif
+    });
+    ui->set_cursor_index(cursor_index);
     ui->run();
 }
