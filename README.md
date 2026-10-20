@@ -3,7 +3,7 @@ simple project making a scientific calculator while adhering to basic ui/ux desi
 # UI design
 ![Alt text](images/uiPreview.png)
 #### UI explained
-![Alt text](images/uiExplained.png)
+![Alt text](images/UiExplained.png)
 # keybinds
 |Keybind|description|note|
 |-------|-----------|----| 
