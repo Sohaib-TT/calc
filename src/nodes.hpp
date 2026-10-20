@@ -4,12 +4,9 @@
 
 struct Node
 {   
-    char cvalue[3];
-    int type; // 0 = number, 1= operator
-    Node* details;
-    Node* pdetails;
-    Node* n;
-    Node* p;
+    std::string value;
+    Node* next;
+    Node* previous;
 };
 
 struct DisplayNode {

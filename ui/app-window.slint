@@ -59,6 +59,7 @@ component SciButton inherits Rectangle {
     }
 }
 
+
 export component AppWindow inherits Window {
 
     in property <[string]> display-list;
@@ -105,8 +106,8 @@ export component AppWindow inherits Window {
         KeyBinding {keys: @keys(Plus);activated => {root.button-pressed("+");}}
         KeyBinding {keys: @keys(HyphenMinus);activated => {root.button-pressed("-");}}
         KeyBinding {keys: @keys(Asterisk);activated => {root.button-pressed("*");}}
-        KeyBinding {keys: @keys(Slash);activated => {root.button-pressed("div");}}
-        KeyBinding {keys: @keys(Period);activated => {root.button-pressed("dot");}}
+        KeyBinding {keys: @keys(Slash);activated => {root.button-pressed("/");}}
+        KeyBinding {keys: @keys(Period);activated => {root.button-pressed(".");}}
         KeyBinding {keys: @keys(Percent);activated => {root.button-pressed("%");}}
         KeyBinding {keys: @keys(OpenParen);activated => {root.button-pressed("(");}}
         KeyBinding {keys: @keys(CloseParen);activated => {root.button-pressed(")");}}
@@ -133,19 +134,6 @@ export component AppWindow inherits Window {
                     padding-left:5px;
                     property <length> xpos:0;
                     for text-value[index] in display-list : HorizontalLayout {
-                    
-                    property <bool> cursor: index > 0 && display-list[index - 1] == "I";
-                    if text-value  != "I" :txt :=Rectangle {
-                        max-width: 25px;
-                        preferred-width: 15px;
-                        height: 25px;
-                        HorizontalLayout{
-                        Rectangle{
-                            width: 2px;
-                            height: 22px;
-                            background: cursor ? #fefefe : #121316;
-                            
-                        }
                         Text {
                         text: text-value;
                         color: white;
@@ -154,8 +142,6 @@ export component AppWindow inherits Window {
                         vertical-alignment: center;
                         horizontal-alignment: center;
                         }
-                        }
-                    }
                     }
                     if display-list.length -1 == cursor-index : Rectangle{
                             width: 2px;
@@ -207,7 +193,7 @@ export component AppWindow inherits Window {
                 SciButton {
                     icon: @image-url("icons/square root.png");
                     bg-color: #434b5e;
-                    value: "root";
+                    value: "√";
                     clicked => {
                         root.button-pressed(self.value);
                     }}
@@ -216,7 +202,7 @@ export component AppWindow inherits Window {
                 SciButton {
                     icon: @image-url("icons/ln.png");
                     bg-color: #434b5e;
-                    value: "root";
+                    value: "ln(";
                     clicked => {
                         root.button-pressed(self.value);
                     }
@@ -224,7 +210,7 @@ export component AppWindow inherits Window {
                 SciButton {
                     icon: @image-url("icons/log.png");
                     bg-color: #434b5e;
-                    value: "log";
+                    value: "log(";
                     clicked => {
                         root.button-pressed(self.value);
                     }
@@ -232,21 +218,21 @@ export component AppWindow inherits Window {
                 SciButton {
                     icon: @image-url("icons/cos.png");
                     bg-color: #434b5e;
-                    value: "cos";
+                    value: "cos(";
                     clicked => {
                         root.button-pressed(self.value);
                     }}
                 SciButton {
                     icon: @image-url("icons/sin.png");
                     bg-color: #434b5e;
-                    value: "sin";
+                    value: "sin(";
                     clicked => {
                         root.button-pressed(self.value);
                     }}
                 SciButton {
                     icon: @image-url("icons/tan.png");
                     bg-color: #434b5e;
-                    value: "tan";
+                    value: "tan(";
                     clicked => {
                         root.button-pressed(self.value);
                     }}
@@ -271,6 +257,9 @@ export component AppWindow inherits Window {
                 CalcButton {
                     icon: @image-url("icons/ans.png");
                     bg-color: #F43F5E;
+                    clicked => {
+                        root.button-pressed(self.value);
+                    }
                 }
                 CalcButton {
                     icon: @image-url("icons/mod.png");
@@ -283,7 +272,7 @@ export component AppWindow inherits Window {
                 CalcButton {
                     icon: @image-url("icons/div.png");
                     bg-color: #2D323F;
-                    value: "div";
+                    value: "/";
                     clicked => {
                         root.button-pressed(self.value);
                     }
@@ -315,7 +304,7 @@ export component AppWindow inherits Window {
                 CalcButton {
                     icon: @image-url("icons/mult.png");
                     bg-color: #2D323F;
-                    value: "x";
+                    value: "*";
                     clicked => {
                         root.button-pressed(self.value);
                     }
@@ -386,7 +375,7 @@ export component AppWindow inherits Window {
             Row {
                 CalcButton {
                     icon: @image-url("icons/dot.png");
-                    value: "dot";
+                    value: ".";
                     clicked => {
                         root.button-pressed(self.value);
                     }
