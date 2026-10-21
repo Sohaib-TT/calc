@@ -21,7 +21,8 @@ int main(int argc, char **argv)
     ui->set_display_list(model);
     
 
-    Node* dsplyHead = createNode(std::string("Start"));
+    Node* dsplyHead = new Node();
+    dsplyHead->value = "Start";
     Node* cursor = dsplyHead;
     int cursor_index = 0;
     
@@ -29,13 +30,14 @@ int main(int argc, char **argv)
 
     ui->on_button_pressed([&](slint::SharedString val) {
         std::string value = std::string(val);
-        if (value == "del") {del(cursor);}
+        if (value == "del") {del(&cursor);}
         else if(value == "ac"){printf("ac");}
         else if(value == "="){printf("=");}
         else if(value == "<" || value == ">" ){moveCursor(&cursor,value);}
-        else {add(cursor,value);}
+        else {add(&cursor,value);}
         ui->set_cursor_index(cursor_index);
-        displayCMD(dsplyHead,cursor);
+        //displayCMD(dsplyHead,cursor);
+        displaySlint (model,dsplyHead,cursor);
     });
 
 

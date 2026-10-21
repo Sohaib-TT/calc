@@ -134,7 +134,12 @@ export component AppWindow inherits Window {
                     padding-left:5px;
                     property <length> xpos:0;
                     for text-value[index] in display-list : HorizontalLayout {
-                        Text {
+                        if text-value == "I" : Rectangle{
+                            width: 2px;
+                            height: 22px;
+                            background:#fefefe;
+                        }
+                        if text-value != "I" :Text {
                         text: text-value;
                         color: white;
                         font-size: 22px;
@@ -143,12 +148,7 @@ export component AppWindow inherits Window {
                         horizontal-alignment: center;
                         }
                     }
-                    if display-list.length -1 == cursor-index : Rectangle{
-                            width: 2px;
-                            height: 22px;
-                            background:#fefefe;
-                            
-                    }
+                    
 
                 }
                 }
