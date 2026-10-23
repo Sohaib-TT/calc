@@ -63,7 +63,8 @@ component SciButton inherits Rectangle {
 export component AppWindow inherits Window {
 
     in property <[string]> display-list;
-    in property <int> cursor-index;
+    in-out property <bool> leftOverflow : false;
+    in-out property <bool> rightOverflow : false;
 
     callback open-docs();
     callback open-info();
@@ -91,6 +92,7 @@ export component AppWindow inherits Window {
     background: #0a0a0a;
 
     callback button-pressed(string);
+    callback container-resized(length);
 
     FocusScope {
         KeyBinding {keys: @keys(Digit0);activated => {root.button-pressed("0");}}
@@ -126,23 +128,56 @@ export component AppWindow inherits Window {
                 background: #121316;
                 border-bottom-left-radius: 20px;
                 border-bottom-right-radius: 20px;
+                changed width => {
+                    root.container-resized(self.width);
+                }
                 ScrollView {
                 vertical-scrollbar-policy: always-off; 
                 horizontal-scrollbar-policy: as-needed;
                 HorizontalLayout {
                     padding-top: 20px;
                     padding-left:5px;
-                    property <length> xpos:0;
-                    for text-value[index] in display-list : HorizontalLayout {
+                    Rectangle {
+                        width: 24px;
+                        if root.leftOverflow :Text {
+                        text: "<";
+                        color: white;
+                        font-size: 26px;
+                        font-weight: 600;
+                        vertical-alignment: center;
+                        horizontal-alignment: center;
+                        }
+                    }
+                    for text-value[index] in display-list : Rectangle {
+                        width: 17px;
                         if text-value == "I" : Rectangle{
                             width: 2px;
-                            height: 22px;
+                            height: 27px;
                             background:#fefefe;
                         }
-                        if text-value != "I" :Text {
+                        if text-value == "root" :Text {
+                        text: "√";
+                        color: white;
+                        font-size: 25px;
+                        font-weight: 900;
+                        vertical-alignment: center;
+                        horizontal-alignment: left;
+                        }
+                        if text-value != "I" && text-value != "root" :Text {
                         text: text-value;
                         color: white;
-                        font-size: 22px;
+                        font-size: 25px;
+                        font-weight: 600;
+                        vertical-alignment: center;
+                        horizontal-alignment: left;
+                        }
+                    }
+                    Rectangle {
+                        width: 24px;
+                        if root.rightOverflow :Text {
+                        text: ">";
+                        color: white;
+                        font-size: 26px;
                         font-weight: 600;
                         vertical-alignment: center;
                         horizontal-alignment: center;
@@ -193,7 +228,7 @@ export component AppWindow inherits Window {
                 SciButton {
                     icon: @image-url("icons/square root.png");
                     bg-color: #434b5e;
-                    value: "√";
+                    value: "root";
                     clicked => {
                         root.button-pressed(self.value);
                     }}
