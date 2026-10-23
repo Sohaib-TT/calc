@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     Node* dsplyHead = new Node();
     dsplyHead->value = "Start";
     Node* cursor = dsplyHead;
-    int cursor_index = 0;
+    int dsplyStrlength = 11;
     
 
 
@@ -34,10 +34,10 @@ int main(int argc, char **argv)
         else if(value == "ac"){printf("ac");}
         else if(value == "="){printf("=");}
         else if(value == "<" || value == ">" ){moveCursor(&cursor,value);}
+        else if(value == "root"){add(&cursor,"'");}
         else {add(&cursor,value);}
-        ui->set_cursor_index(cursor_index);
         //displayCMD(dsplyHead,cursor);
-        displaySlint (model,dsplyHead,cursor);
+        displaySlint (ui,model,dsplyHead,cursor,dsplyStrlength);
     });
 
 
@@ -59,7 +59,9 @@ int main(int argc, char **argv)
             system("xdg-open https://github.com/Sohaib-TT/calc");
         #endif
     });
-
-    ui->set_cursor_index(cursor_index);
+    ui->on_container_resized([ui, &dsplyStrlength, &model, &dsplyHead, &cursor](float new_width) {
+        dsplyStrlength = static_cast<int>(std::round(new_width / 22.0f));
+        displaySlint (ui,model,dsplyHead,cursor,dsplyStrlength);
+    });
     ui->run();
 }

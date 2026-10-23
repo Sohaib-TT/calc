@@ -8,26 +8,57 @@
 #include <string>
 
 
-void displaySlint (const std::shared_ptr<slint::VectorModel<slint::SharedString>>& display, Node* head,Node* cursor){
-    slint::SharedString text = "";
+void displaySlint (
+    slint::ComponentHandle<AppWindow>ui,
+    const std::shared_ptr<slint::VectorModel<slint::SharedString>>& display,
+    Node* head,
+    Node* cursor,
+    int dsplylength)
+    {
+    std::string eq = "";
+    bool leftof= false,rightof=false;
     display->clear();
     if(cursor == head){
-        display->push_back("I");
+        eq.append("I");
     }
+    //creating the whole eqution string
     Node* node = head->next;
     while(node != nullptr){
-        for (int i = 0; i < (node->value.length()); i++)
-        {
-            text = std::string(1, node->value[i]);
-            std::cout << text;
-            display->push_back(text);
+        for (int i = 0; i < (node->value.length()); i++){
+            eq.append(std::string(1, node->value[i]));
+            //display->push_back();
         }
-        
-        if(cursor == node){
-            display->push_back("I");
-        }
+        if(cursor == node){eq.append("I");}//display->push_back("I");}
         node = node->next;
     }
+    std::cout <<"\n"+eq;
+    //creating the display string
+    std::string dsplyStr = "";
+    int i = eq.find("I");
+    while (dsplyStr.length() < (dsplylength-2)){
+        dsplyStr = eq.at(i) + dsplyStr;
+        i--;
+        leftof=true;
+        if(i< 0){leftof=false;break;}
+    }
+    i = eq.find("I");
+    i++;
+    while (dsplyStr.length() < dsplylength && i<eq.length()){
+        dsplyStr = dsplyStr + eq.at(i);
+        i++;
+        rightof= true;
+        if(i== eq.length()){rightof=false;break;}
+    }
+    std::cout <<"\n"<<"dislpay: "<< dsplyStr;
+
+    //sending string to display
+    for ( i = 0; i < dsplyStr.length(); i++){
+        if(dsplyStr.at(i) == '\''){display->push_back(slint::SharedString("root"));}
+        else{display->push_back(slint::SharedString(std::string(1, dsplyStr.at(i))));}
+    }
+    ui->set_leftOverflow(leftof);
+    ui->set_rightOverflow(rightof);
+    
 }
 
 void add(Node** cursor,std::string value){
