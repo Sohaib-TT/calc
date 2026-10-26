@@ -1,10 +1,13 @@
 #include "app-window.h"
+#include "nodes.hpp"
+#include "displayBuilder.hpp"
+#include "calculator.hpp"
+#include "exprtk.hpp"
+
 #include <stdio.h>
 #include <cstdio>
 #include <stdlib.h>
 #include <string>
-#include "nodes.hpp"
-#include "displayBuilder.hpp"
 #include <vector>
 
 
@@ -18,7 +21,7 @@ int main(int argc, char **argv)
     auto ui = AppWindow::create();
 
     auto model = std::make_shared<slint::VectorModel<slint::SharedString>>();
-    ui->set_display_list(model);
+    
     
 
     Node* dsplyHead = new Node();
@@ -30,14 +33,22 @@ int main(int argc, char **argv)
 
     ui->on_button_pressed([&](slint::SharedString val) {
         std::string value = std::string(val);
+        std::string result = "2";
+        
         if (value == "del") {del(&cursor);}
-        else if(value == "ac"){printf("ac");}
-        else if(value == "="){printf("=");}
+        else if(value == "ac"){ac(dsplyHead,&cursor);}
         else if(value == "<" || value == ">" ){moveCursor(&cursor,value);}
-        else if(value == "root"){add(&cursor,"'");}
+        else if(value == "root"){add(&cursor,"sqrt(");}
+        else if(value == "="){result = calculate(dsplyHead,&cursor);}
         else {add(&cursor,value);}
         //displayCMD(dsplyHead,cursor);
         displaySlint (ui,model,dsplyHead,cursor,dsplyStrlength);
+        if(result != "2"){
+            model->clear();
+            for(int i = 0; i<result.length();i++){
+                model->push_back(slint::SharedString(std::string(1, result.at(i))));
+            }
+        }
     });
 
 
@@ -63,5 +74,6 @@ int main(int argc, char **argv)
         dsplyStrlength = static_cast<int>(std::round(new_width / 22.0f));
         displaySlint (ui,model,dsplyHead,cursor,dsplyStrlength);
     });
+    ui->set_display_list(model);
     ui->run();
 }
