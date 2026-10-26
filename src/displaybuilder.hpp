@@ -1,3 +1,5 @@
+#pragma once
+
 #include "app-window.h"
 #include "nodes.hpp"
 
@@ -8,7 +10,7 @@
 #include <string>
 
 
-void displaySlint (
+inline void displaySlint (
     slint::ComponentHandle<AppWindow>ui,
     const std::shared_ptr<slint::VectorModel<slint::SharedString>>& display,
     Node* head,
@@ -61,7 +63,7 @@ void displaySlint (
     
 }
 
-void add(Node** cursor,std::string value){
+inline void add(Node** cursor,std::string value){
     Node* node = new Node();
     node->value = value;
     node->next = (*cursor)->next;
@@ -70,7 +72,7 @@ void add(Node** cursor,std::string value){
     *cursor = node;
 }
 
-void del(Node** cursor){
+inline void del(Node** cursor){
     if((*cursor)->value == "Start"){return;}
     Node* del = *cursor;
     (*cursor) = (*cursor)->previous;
@@ -79,7 +81,7 @@ void del(Node** cursor){
     delete del;
 }
 
-void moveCursor(Node** cursor,std::string diraction){
+inline void moveCursor(Node** cursor,std::string diraction){
     if(diraction == ">"){
         if((*cursor)->next != nullptr){
             *cursor = (*cursor)->next;
@@ -91,7 +93,7 @@ void moveCursor(Node** cursor,std::string diraction){
     }
 }
 
-void displayCMD(Node* head,Node* cursor){
+inline void displayCMD(Node* head,Node* cursor){
     Node* node = head;
     while (node != nullptr)
     {  
@@ -102,6 +104,13 @@ void displayCMD(Node* head,Node* cursor){
     std::cout <<"\n";
 }
 
-int displayBuilder(Node* node , Node* end = NULL){
-    return 0;
-} 
+inline void ac(Node* head,Node** cursor){
+    Node* node = head;
+    *cursor = head;
+    while (node->next != NULL){node = node->next;}
+    while (node->previous != NULL){
+        node = node->previous;
+        delete node->next;
+        node->next = NULL;
+    }
+}

@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.21)
 project(my_application LANGUAGES CXX)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/Debug)
+foreach(OUTPUT_CONFIG ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${OUTPUT_CONFIG} CONFIG_SUFFIX)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_SUFFIX} ${CMAKE_BINARY_DIR}/bin/${OUTPUT_CONFIG})
+endforeach()
+
 find_package(Slint QUIET)
 if (NOT Slint_FOUND)
   message("Slint could not be located in the CMake module search path. Downloading it from Git and building it locally")
@@ -27,3 +33,7 @@ slint_target_sources(my_application ui/app-window.slint)
 if (WIN32)
     add_custom_command(TARGET my_application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:my_application> $<TARGET_FILE_DIR:my_application> COMMAND_EXPAND_LISTS)
 endif()
+
+# Copies calc/ui/icons/ into build/bin/Debug/icons/
+file(COPY ${CMAKE_SOURCE_DIR}/icons DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+set_target_properties(my_application PROPERTIES SLINT_EMBED_RESOURCES embed-files)
